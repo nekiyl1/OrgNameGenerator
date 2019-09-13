@@ -1,0 +1,44 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Генератор названия организации</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"  type="text/javascript"></script>
+    <script>
+        $(document).ready(function(){
+            $('#btn_submit').click(function(){
+                var count = $('#count').val();
+                var file_data = $('#file')[0].files[0];	
+				var formData = new FormData();	
+				formData.append("count", count);	
+				formData.append("file", file_data);
+                $.ajax({
+                    url: "OrgNameGenerator.php",
+                    type: "post",
+                    dataType: "json",
+                    data: formData,
+					processData: false,
+					contentType: false,
+                    success: function(data){
+                        $('.orgnames').html(data.result);
+                    },
+					error: function(XMLHttpRequest, textStatus, errorThrown) { 
+						alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+					} 
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <label>Количество генерируемых названий:</label><br/>
+    <input type="number" id="count" value="10" /><br/>
+     
+    <label>Файл со списком организаций (каждое название с новой строки),<br/>
+	если не выбрать файл будет использоваться список по-умолчанию:</label><br/>
+    <input type="file" id="file" value="" /><br/>    
+    <br/>
+    <input type="button" value="Отправить" id="btn_submit" /> 
+	<br/>	
+    <div class="orgnames"></div>	
+</body>
+</html>
